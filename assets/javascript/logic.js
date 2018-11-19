@@ -8,3 +8,12 @@ var config = {
     storageBucket: "train-times-data.appspot.com",
     messagingSenderId: "736432072110"
   };
+
+  firebase.intializeApp(config);
+
+  var database = database();
+
+  var trainName ="";
+  var dstination="";
+  var startTime ="";
+  var frequency = 0;

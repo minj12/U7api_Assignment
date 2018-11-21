@@ -1,21 +1,28 @@
+/* Will add picture background in the future */
+/*
 body {
-  background-image: url()
+   background-image: url(assets/images/)
 }
+*/
 
+/* Heading title information */ 
 #heading {
   font-family: Times;
   font-weight: bold;
 }
 
+/* Sub-heading informaton*/
 #subHeading {
   font-family: Times;
   font-style: italic;
 }
 
+/*New Train section info*/
 .panel-title {
   font-weight: bold;
 }
 
+/*Table header information*/
 th {
   font-weight: bold;
 }

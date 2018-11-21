@@ -8,11 +8,11 @@ var config = {
   messagingSenderId: "736432072110"
 };
 
+
 firebase.initializeApp(config);
 
-//Variable for Firebase database 
 var database = firebase.database();
-//Form subject variables
+
 var trainName = "";
 var destination = "";
 var startTime = "";
@@ -24,7 +24,7 @@ function currentTime() {
   setTimeout(currentTime, 1000);
 };
 
-$(".form-field").on("keyup", function () {
+$(".form-field").on("keyup", function() {
   var traintemp = $("#train-name").val().trim();
   var citytemp = $("#destination").val().trim();
   var timetemp = $("#first-train").val().trim();
@@ -35,30 +35,30 @@ $(".form-field").on("keyup", function () {
   sessionStorage.setItem("time", timetemp);
   sessionStorage.setItem("freq", freqtemp);
 });
-// Get form information which is linked from html
+
 $("#train-name").val(sessionStorage.getItem("train"));
 $("#destination").val(sessionStorage.getItem("city"));
 $("#first-train").val(sessionStorage.getItem("time"));
 $("#frequency").val(sessionStorage.getItem("freq"));
 
 // On click function for Submitting train options 
-$("#submit").on("click", function (event) {
+$("#submit").on("click", function(event) {
   event.preventDefault();
-  //If no "Add New Train" details added in any of the bellow text boxes...
+//If no "Add New Train" details added in any of the bellow text boxes...
   if ($("#train-name").val().trim() === "" ||
     $("#destination").val().trim() === "" ||
     $("#first-train").val().trim() === "" ||
     $("#frequency").val().trim() === "") {
-    //Send user alert to add more or fill all text boxes
+//Send user alert to add more or fill all text boxes
     alert("Please fill in all details to add new train");
 
   } else {
-    //Else if user fill following information
+//Else if user fill following information
     trainName = $("#train-name").val().trim();
     destination = $("#destination").val().trim();
     startTime = $("#first-train").val().trim();
     frequency = $("#frequency").val().trim();
-    //Push "Add New Train" form details to firebase from "Add Train of html
+//Push "Add New Train" form details to firebase
     $(".form-field").val("");
 
     database.ref().push({
@@ -68,20 +68,20 @@ $("#submit").on("click", function (event) {
       startTime: startTime,
       dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
-    //Clears the form after transfer to firebase is complete
+//Clears the form after transfer to firebase is complete
     sessionStorage.clear();
   }
 
 });
 // Train time properties seen on form of train schedule calculated
-database.ref().on("child_added", function (childSnapshot) {
+database.ref().on("child_added", function(childSnapshot) {
   var startTimeConverted = moment(childSnapshot.val().startTime, "hh:mm").subtract(1, "years");
   var timeDiff = moment().diff(moment(startTimeConverted), "minutes");
   var timeRemain = timeDiff % childSnapshot.val().frequency;
   var minToArrival = childSnapshot.val().frequency - timeRemain;
   var nextTrain = moment().add(minToArrival, "minutes");
   var key = childSnapshot.key;
-  //For adding table row and javascript adding text on schedule
+//For adding table row and javascript adding text on schedule
   var newrow = $("<tr>");
   newrow.append($("<td>" + childSnapshot.val().trainName + "</td>"));
   newrow.append($("<td>" + childSnapshot.val().destination + "</td>"));
@@ -94,12 +94,12 @@ database.ref().on("child_added", function (childSnapshot) {
     newrow.addClass("info");
   }
 
-//Every entry has a new row.
+  //Every entry has a new row.
   $("#train-table-rows").append(newrow);
 
 });
-//Click  button 
-$(document).on("click", ".arrival", function () {
+//Click x button 
+$(document).on("click", ".arrival", function() {
   keyref = $(this).attr("data-key");
   database.ref().child(keyref).remove();
   window.location.reload();
@@ -107,7 +107,6 @@ $(document).on("click", ".arrival", function () {
 
 currentTime();
 
-//Reload form details
-setInterval(function () {
+setInterval(function() {
   window.location.reload();
 }, 60000);
